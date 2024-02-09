@@ -1,24 +1,26 @@
-import logo from './logo.svg';
+import { createContext, useEffect, useState } from 'react';
 import './App.css';
+import Player from './Pages/Player/Player';
+import { getTracks } from './Services/api';
+
+export const MusicContext = createContext();
+
 
 function App() {
+  const [musics, setMusics] = useState([]);
+
+  useEffect(() => {
+    const fetchTracks = async () => {
+      const tracks = await getTracks();
+      setMusics(tracks);
+    };
+
+    fetchTracks();
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <MusicContext.Provider value={musics}>
+           <Player />
+      </MusicContext.Provider>
   );
 }
 
